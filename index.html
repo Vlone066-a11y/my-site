@@ -1,16 +1,234 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сайт в разработке</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Касса Судного Дня</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:#090d16;color:#f8fafc;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:12px}
+  .box{width:100%;max-width:800px;background:#111827;border:1px solid #334155;border-radius:18px;padding:20px;box-shadow:0 20px 50px #000}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .logo{font-size:1.2rem;font-weight:800;color:#38bdf8}
+  .snd{background:#1e293b;color:#fff;border:1px solid #475569;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#0b0f19;border:1px solid #334155;border-radius:12px;padding:12px;margin-bottom:12px;text-align:center}
+  .lbl{font-size:.7rem;color:#94a3b8;text-transform:uppercase}
+  .val{font-size:1.05rem;font-weight:800;margin-top:2px}
+  .pos{color:#22c55e}.neg{color:#ef4444}
+  .story{background:#172554;border-left:4px solid #38bdf8;padding:12px;border-radius:8px;margin-bottom:12px;font-size:.9rem;line-height:1.4}
+  .story.err{background:#450a0a;border-left-color:#ef4444;color:#fecaca}
+  .ranks{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
+  .pill{background:#0b0f19;border:1px solid #334155;padding:4px 8px;border-radius:6px;font-size:.72rem;white-space:nowrap;color:#94a3b8}
+  .pill.on{border-color:#38bdf8;color:#38bdf8;font-weight:700}
+  .bar{display:flex;gap:8px;margin-bottom:10px}
+  .inp{flex:1;background:#0b0f19;border:1px solid #475569;border-radius:10px;padding:10px 14px;color:#fff;outline:none;font-size:.95rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;max-height:310px;overflow-y:auto;background:#0b0f19;border:1px solid #334155;border-radius:10px;padding:10px;margin-bottom:14px}
+  .tile{background:#1e293b;padding:7px 10px;border-radius:6px;display:flex;justify-content:space-between;font-size:.82rem}
+  .tile b{color:#38bdf8}
+  .btn{width:100%;background:#0284c7;color:#fff;border:none;border-radius:10px;padding:13px;font-size:1rem;font-weight:700;cursor:pointer}
+  .btn:hover:not(:disabled){background:#0369a1}
+  .btn:disabled{background:#334155;cursor:not-allowed}
+  .tbox{background:#0b0f19;border:1px solid #334155;border-radius:10px;padding:10px 14px;margin-bottom:12px}
+  .ttop{display:flex;justify-content:space-between;font-weight:700;font-size:.85rem;margin-bottom:6px}
+  .tbg{width:100%;height:8px;background:#1e293b;border-radius:99px;overflow:hidden}
+  .tfill{height:100%;width:100%;background:#22c55e;transition:width .1s linear}
+  .rec{background:#f8fafc;color:#0f172a;border-radius:10px;padding:14px;font-family:monospace;margin-bottom:12px}
+  .rhead{text-align:center;border-bottom:2px dashed #94a3b8;padding-bottom:6px;margin-bottom:8px;font-weight:700}
+  .rrow{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted #cbd5e1;font-size:.95rem;font-weight:700}
+  .sec{background:#e2e8f0;color:#64748b;padding:1px 6px;border-radius:4px}
+  .opn{background:#dbeafe;color:#0369a1;padding:1px 6px;border-radius:4px}
+  .hints{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .bhint{background:#1e293b;color:#fff;border:1px solid #475569;padding:9px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.85rem}
+  .bhint:disabled{opacity:.4;cursor:not-allowed}
+  .prow{display:flex;gap:8px;margin-bottom:10px}
+  .pinp{flex:1;background:#0b0f19;border:2px solid #38bdf8;border-radius:10px;padding:10px 14px;color:#fff;font-size:1.15rem;font-weight:800;outline:none}
+  .prow .btn{width:auto;padding:0 22px}
+  .msg{padding:10px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:10px;font-size:.9rem}
+  .msg.ok{background:#052e16;border:1px solid #22c55e;color:#4ade80}
+  .msg.err{background:#450a0a;border:1px solid #ef4444;color:#f87171}
+  .foot{margin-top:12px;padding-top:10px;border-top:1px solid #334155;display:flex;justify-content:space-between;font-size:.75rem;color:#94a3b8}
+  .rst{background:none;border:none;color:#94a3b8;text-decoration:underline;cursor:pointer}
+  .hide{display:none!important}
+  @media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.hints{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-    <main class="container">
-        <div class="badge">Скоро открытие</div>
-        <h1>Сайт пока в разработке</h1>
-        <p>Мы работаем над созданием нового проекта. Совсем скоро здесь появится много интересного!</p>
-    </main>
-</body>
-</html>
+<div class="box">
+  <div class="top">
+    <div class="logo">🛒 КАССА СУДНОГО ДНЯ</div>
+    <button class="snd" id="bSnd">🔊 Звук: ВКЛ</button>
+  </div>
+  <div class="stats">
+    <div><div class="lbl">Должность</div><div class="val" id="uRank" style="color:#38bdf8">🧹 Стажировщик</div></div>
+    <div><div class="lbl">Очки</div><div class="val pos" id="uScore">0</div></div>
+    <div><div class="lbl">Серия</div><div class="val" id="uStr" style="color:#f59e0b">0 🔥</div></div>
+    <div><div class="lbl">Рекорд</div><div class="val" id="uBest">0</div></div>
+  </div>
+  <div class="ranks" id="uRanks"></div>
+
+  <div id="vDoc">
+    <div class="story" id="sDoc"><b>Глава 1. Стажировка.</b> Управляющий дал вам прайс-лист на <b>100 товаров</b>: <i>«Учи цены! Если касса сгорит — будешь считать в уме, иначе уйдёшь в минус!»</i></div>
+    <div class="bar">
+      <input type="text" class="inp" id="qInp" placeholder="🔍 Поиск по 100 товарам (молоко, хлеб, яблоко)...">
+      <div class="snd" id="dCnt" style="cursor:default">100 / 100</div>
+    </div>
+    <div class="grid" id="gList"></div>
+    <button class="btn" id="bGo">Я запомнил цены! Встать за кассу →</button>
+  </div>
+
+  <div id="vGame" class="hide">
+    <div class="story err" id="sGame"><b>⚡ КАССА СЛОМАЛАСЬ!</b> Экран погас! Сложите стоимость товаров в уме и успейте пробить чек!</div>
+    <div class="tbox">
+      <div class="ttop"><span id="uMood">🙂 Покупатель ждёт...</span><span id="uTime">20.0 сек</span></div>
+      <div class="tbg"><div class="tfill" id="uBar"></div></div>
+    </div>
+    <div class="rec">
+      <div class="rhead">ЧЕК №<span id="uNum">1</span> • ТЕРМИНАЛ ОФФЛАЙН</div>
+      <div id="uRows"></div>
+    </div>
+    <div class="hints">
+      <button class="bhint" id="bH1">💡 Подсмотреть 1 цену (-2 очка)</button>
+      <button class="bhint" id="bH2">📄 Сбегать к прайсу (-5 очков)</button>
+    </div>
+    <div class="prow">
+      <input type="number" class="pinp" id="aInp" placeholder="Итоговая сумма (руб)...">
+      <button class="btn" id="bPay">Пробить</button>
+    </div>
+    <div class="msg hide" id="uMsg"></div>
+  </div>
+
+  <div class="foot">
+    <span>Enter — быстрый ответ</span>
+    <button class="rst" id="bRst">Сбросить прогресс</button>
+  </div>
+</div>
+
+<script>
+const DB=[
+  {n:"Яблоко",p:3},{n:"Молоко",p:40},{n:"Буханка хлеба",p:75},{n:"Батон нарезной",p:45},{n:"Яйца (10 шт)",p:110},
+  {n:"Сыр Российский",p:240},{n:"Колбаса Докторская",p:320},{n:"Масло сливочное",p:180},{n:"Сахар (1 кг)",p:68},{n:"Соль",p:18},
+  {n:"Гречка",p:85},{n:"Рис",p:95},{n:"Макароны",p:60},{n:"Мука",p:55},{n:"Чай чёрный",p:130},
+  {n:"Кофе растворимый",p:290},{n:"Шоколад",p:90},{n:"Печенье",p:70},{n:"Вода питьевая",p:35},{n:"Сок апельсиновый",p:120},
+  {n:"Кефир",p:65},{n:"Творог",p:115},{n:"Сметана",p:88},{n:"Йогурт",p:52},{n:"Картофель (1 кг)",p:38},
+  {n:"Морковь",p:32},{n:"Лук репчатый",p:29},{n:"Помидоры",p:160},{n:"Огурцы",p:140},{n:"Бананы",p:125},
+  {n:"Апельсины",p:135},{n:"Лимон",p:25},{n:"Чеснок",p:15},{n:"Курица",p:260},{n:"Фарш говяжий",p:390},
+  {n:"Сосиски",p:210},{n:"Пельмени",p:310},{n:"Рыба минтай",p:195},{n:"Крабовые палочки",p:98},{n:"Майонез",p:82},
+  {n:"Кетчуп",p:78},{n:"Горчица",p:42},{n:"Масло подсолнечное",p:128},{n:"Огурцы солёные",p:145},{n:"Горошек зелёный",p:76},
+  {n:"Кукуруза сладкая",p:84},{n:"Тушёнка",p:230},{n:"Сгущёнка",p:118},{n:"Варенье",p:175},{n:"Мёд",p:340},
+  {n:"Орехи грецкие",p:280},{n:"Изюм",p:112},{n:"Семечки",p:58},{n:"Чипсы",p:105},{n:"Сухарики",p:34},
+  {n:"Мороженое",p:64},{n:"Торт бисквитный",p:480},{n:"Зефир",p:92},{n:"Мармелад",p:74},{n:"Конфеты",p:250},
+  {n:"Мыло",p:48},{n:"Шампунь",p:220},{n:"Зубная паста",p:132},{n:"Зубная щётка",p:86},{n:"Туалетная бумага",p:114},
+  {n:"Салфетки",p:36},{n:"Порошок стиральный",p:360},{n:"Средство для посуды",p:96},{n:"Губки кухонные",p:44},{n:"Пакет-майка",p:7},
+  {n:"Спички",p:5},{n:"Батарейки (2 шт)",p:108},{n:"Лампочка LED",p:94},{n:"Тетрадь",p:39},{n:"Ручка шариковая",p:19},
+  {n:"Карандаш",p:12},{n:"Клей ПВА",p:46},{n:"Скотч",p:54},{n:"Корм для кошек",p:31},{n:"Наполнитель для лотка",p:165},
+  {n:"Квас",p:89},{n:"Лимонад",p:66},{n:"Энергетик",p:99},{n:"Пицца замороженная",p:275},{n:"Блинчики с мясом",p:155},
+  {n:"Котлеты",p:215},{n:"Сырок глазированный",p:33},{n:"Творожная масса",p:87},{n:"Ряженка",p:62},{n:"Сливки",p:79},
+  {n:"Шампиньоны",p:150},{n:"Капуста",p:28},{n:"Свёкла",p:30},{n:"Перец болгарский",p:170},{n:"Укроп",p:41},
+  {n:"Хлопья кукурузные",p:102},{n:"Мюсли",p:138},{n:"Какао",p:91},{n:"Кисель",p:27},{n:"Жвачка",p:37}
+];
+const RNK=[
+  {a:-99999,b:-1,t:"💀 Должник",r:"(<0)"},{a:0,b:9,t:"🧹 Стажировщик",r:"(0-9)"},
+  {a:10,b:34,t:"🪣 Уборщик",r:"(10-34)"},{a:35,b:39,t:"🧾 Кассир",r:"(35-39)"},
+  {a:40,b:49,t:"💼 Зам. директора",r:"(40-49)"},{a:50,b:99,t:"🎩 Директор",r:"(50-99)"},
+  {a:100,b:249,t:"🏛️ Путин",r:"(100-249)"},{a:250,b:99999,t:"⚡ Бог",r:"(250+)"}
+];
+let snd=true,ctx=null,sc=Number(localStorage.getItem("ks_s"))||0,bst=Number(localStorage.getItem("ks_b"))||0;
+let str=0,num=1,bsk=[],rev=[],act=false,tmr=null,maxT=20,lft=20,lSec=0;
+const $=id=>document.getElementById(id);
+
+function tone(f,tp,d,dl=0,v=.15){
+  if(!snd)return;
+  if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();
+  if(ctx.state==="suspended")ctx.resume();
+  const t=ctx.currentTime+dl,o=ctx.createOscillator(),g=ctx.createGain();
+  o.type=tp;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v,t);
+g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ctx.destination);
+o.start(t);o.stop(t+d);
+}
+const pScan=()=>tone(2400,"sine",.08);
+const pOk=()=>{tone(2200,"sine",.08);tone(2800,"sine",.12,.1)};
+const pErr=()=>{tone(180,"sawtooth",.25);tone(130,"sawtooth",.3,.18)};
+const pUp=()=>{tone(523,"triangle",.12);tone(659,"triangle",.12,.12);tone(784,"triangle",.12,.24);tone(1046,"triangle",.25,.36)};
+const pTick=()=>tone(950,"sine",.03,0,.06);
+function getR(s){for(const x of RNK)if(s>=x.a&&s<=x.b)return x;return RNK.at(1)}
+function sync(){
+if(sc>bst){bst=sc;localStorage.setItem("ks_b",bst)}
+localStorage.setItem("ks_s",sc);
+const r=getR(sc);
+$("uRank").textContent=r.t;$("uScore").textContent=sc;
+$("uScore").className="val "+(sc<0?"neg":"pos");
+$("uStr").textContent=str+" 🔥";$("uBest").textContent=bst;
+$("uRanks").innerHTML=RNK.map(x=><div class="pill ${x.t===r.t?"on":""}">${x.t} ${x.r}</div>).join("");
+$("bH1").disabled=!act||sc<2||rev.length>=bsk.length;
+$("bH2").disabled=!act||sc<5;
+}
+function drawList(q=""){
+const s=q.trim().toLowerCase();
+const f=DB.filter(x=>x.n.toLowerCase().includes(s)||String(x.p).includes(s));
+$("dCnt").textContent=${f.length} / ${DB.length};
+$("gList").innerHTML=f.map((x,i)=><div class="tile"><span>${i+1}. ${x.n}</span><b>${x.p} ₽</b></div>).join("");
+}
+function stopT(){if(tmr){clearInterval(tmr);tmr=null}}
+function runT(sec){
+stopT();maxT=sec;lft=sec;lSec=Math.ceil(sec);drawT();
+tmr=setInterval(()=>{
+if(!act)return stopT();
+lft=Math.max(0,lft-.1);drawT();
+const cs=Math.ceil(lft);
+if(lft<=5&&cs<lSec&&cs>0)pTick();
+lSec=cs;
+if(lft<=0){stopT();onOut()}
+},100);
+}
+function drawT(){
+$("uTime").textContent=lft.toFixed(1)+" сек";
+const p=(lft/maxT)*100;$("uBar").style.width=p+"%";
+if(p>55){$("uBar").style.background="#22c55e";$("uMood").textContent="🙂 Покупатель ждёт..."}
+else if(p>25){$("uBar").style.background="#f59e0b";$("uMood").textContent="😤 Покупатель нервничает!"}
+else{$("uBar").style.background="#ef4444";$("uMood").textContent="🤬 «Я СЕЙЧАС УЙДУ! БЫСТРЕЕ!»"}
+}
+function onOut(){
+act=false;str=0;sc-=2;pErr();
+$("aInp").disabled=true;$("bPay").disabled=true;
+const sm=bsk.reduce((a,b)=>a+b.p,0),inf=bsk.map(b=>${b.n} (${b.p}₽)).join(" + ");
+$("uMsg").className="msg err";
+$("uMsg").textContent=⏰ Время вышло! Клиент ушёл (-2 очка). Чек: ${sm} ₽ [${inf}];
+$("uMsg").classList.remove("hide");num++;sync();setTimeout(nextR,3000);
+}
+function nextR(){
+act=true;bsk=[];rev=[];
+$("uMsg").classList.add("hide");$("aInp").value="";$("aInp").disabled=false;$("bPay").disabled=false;$("aInp").focus();
+const c=sc>=100?5:(sc>=40?4:(sc>=10?3:2)),u=new Set();
+while(bsk.length<c){const i=Math.floor(Math.random()DB.length);if(!u.has(i)){u.add(i);bsk.push(DB.at(i))}}
+$("uNum").textContent=num;drawRec();sync();pScan();runT(16+c4);
+}
+function drawRec(){
+$("uRows").innerHTML=bsk.map((x,i)=><div class="rrow"><span>${i+1}. ${x.n}</span>${rev.includes(i)?${x.p} ₽:??? ₽}</div>).join("");
+}
+function pay(){
+if(!act)return;
+const v=$("aInp").value.trim();if(v==="")return $("aInp").focus();
+const n=Number(v);if(isNaN(n))return;
+stopT();act=false;$("aInp").disabled=true;$("bPay").disabled=true;
+const old=getR(sc).t,sm=bsk.reduce((a,b)=>a+b.p,0),inf=bsk.map(b=>${b.n} (${b.p}₽)).join(" + ");
+if(n===sm){
+str++;const bn=lft>maxT*.5?2:0,gn=bsk.length*3+bn;sc+=gn;
+getR(sc).t!==old?pUp():pOk();
+$("uMsg").className="msg ok";
+$("uMsg").textContent=✅ ПИК-ПИК! Верно: ${sm} ₽! +${gn} очков ${bn?"(+2 за скорость!)":""};
+}else{
+str=0;sc-=1;pErr();
+$("uMsg").className="msg err";
+$("uMsg").textContent=❌ Ошибка! Вы ввели ${n} ₽, нужно ${sm} ₽ [${inf}]. Штраф: -1 балл.;
+}
+$("uMsg").classList.remove("hide");num++;sync();setTimeout(nextR,2600);
+}
+$("bSnd").onclick=()=>{snd=!snd;$("bSnd").textContent=snd?"🔊 Звук: ВКЛ":"🔇 Звук: ВЫКЛ";if(snd)pScan()};
+$("qInp").oninput=e=>drawList(e.target.value);
+$("bGo").onclick=()=>{$("vDoc").classList.add("hide");$("vGame").classList.remove("hide");bsk.length===0?nextR():(act=true,sync(),$("aInp").focus(),runT(Math.max(8,lft)))};
+$("bH1").onclick=()=>{if(!act||sc<2)return;for(let i=0;i<bsk.length;i++)if(!rev.includes(i)){rev.push(i);sc-=2;pScan();break}drawRec();sync();$("aInp").focus()};
+$("bH2").onclick=()=>{if(!act||sc<5)return;stopT();sc-=5;pScan();sync();$("vGame").classList.add("hide");$("vDoc").classList.remove("hide");$("sDoc").innerHTML="🏃‍♂️ Вы в подсобке (-5 очков)! Таймер на паузе. Найдите цены и возвращайтесь!";$("bGo").textContent="Вернуться за кассу →"};
+$("bPay").onclick=pay;
+$("aInp").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();pay()}};
+$("bRst").onclick=()=>{if(confirm("Сбросить весь прогресс?")){stopT();sc=0;bst=0;str=0;num=1;bsk=[];localStorage.removeItem("ks_s");localStorage.removeItem("ks_b");$("vGame").classList.add("hide");$("vDoc").classList.remove("hide");$("bGo").textContent="Я запомнил цены! Встать за кассу →";sync()}};
+drawList();sync();
